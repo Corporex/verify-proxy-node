@@ -5,15 +5,23 @@ import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.opensaml.core.config.InitializationException;
+import org.opensaml.core.config.InitializationService;
+import org.opensaml.saml.metadata.resolver.MetadataResolver;
 import uk.gov.ida.dropwizard.logstash.LogstashBundle;
 import uk.gov.ida.eidas.metatron.core.dto.ConfigLoaderUtil;
+import uk.gov.ida.eidas.metatron.core.dto.EidasConfig;
 import uk.gov.ida.eidas.metatron.core.dto.KeyStoreModule;
+import uk.gov.ida.eidas.metatron.core.dto.metadata.MetadataResolverService;
 import uk.gov.ida.eidas.metatron.health.MetatronHealthCheck;
 import uk.gov.ida.eidas.metatron.resources.MetatronResource;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class MetatronApplication extends Application<MetatronConfiguration> {
+
+    public static Map<String, MetadataResolver> resolverMap;
 
     public static void main(final String[] args) throws Exception {
         if (args == null || args.length == 0) {
@@ -49,13 +57,19 @@ public class MetatronApplication extends Application<MetatronConfiguration> {
 
     @Override
     public void run(final MetatronConfiguration configuration,
-                    final Environment environment) throws IOException {
-        final MetatronHealthCheck healthCheck = new MetatronHealthCheck();
-        environment.healthChecks().register("Metatron", healthCheck);
+                    final Environment environment) throws IOException, InitializationException {
 
         String config = System.getenv("COUNTRIES_CONFIG_FILE");
+        InitializationService.initialize();
 
-        environment.jersey().register(new MetatronResource(ConfigLoaderUtil.loadConfig(config)));
+        EidasConfig countriesConfig = ConfigLoaderUtil.loadConfig(config);
+
+        MetadataResolverService resolverService = new MetadataResolverService(countriesConfig);
+
+        final MetatronHealthCheck healthCheck = new MetatronHealthCheck(resolverService);
+        environment.healthChecks().register("Metatron", healthCheck);
+
+        environment.jersey().register(new MetatronResource(countriesConfig, resolverService));
+
     }
-
 }
