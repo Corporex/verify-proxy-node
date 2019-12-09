@@ -5,6 +5,7 @@ import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
 import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.opensaml.core.config.InitializationException;
 import org.opensaml.core.config.InitializationService;
 import org.opensaml.saml.metadata.resolver.MetadataResolver;
@@ -17,6 +18,7 @@ import uk.gov.ida.eidas.metatron.health.MetatronHealthCheck;
 import uk.gov.ida.eidas.metatron.resources.MetatronResource;
 
 import java.io.IOException;
+import java.security.Security;
 import java.util.Map;
 
 public class MetatronApplication extends Application<MetatronConfiguration> {
@@ -58,6 +60,8 @@ public class MetatronApplication extends Application<MetatronConfiguration> {
     @Override
     public void run(final MetatronConfiguration configuration,
                     final Environment environment) throws IOException, InitializationException {
+
+        Security.addProvider(new BouncyCastleProvider());
 
         String config = System.getenv("COUNTRIES_CONFIG_FILE");
         InitializationService.initialize();
