@@ -1,4 +1,4 @@
-package uk.gov.ida.eidas.metatron.core.dto;
+package uk.gov.ida.eidas.metatron.domain;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

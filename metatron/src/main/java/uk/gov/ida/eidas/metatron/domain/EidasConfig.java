@@ -1,9 +1,8 @@
-package uk.gov.ida.eidas.metatron.core.dto;
+package uk.gov.ida.eidas.metatron.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;

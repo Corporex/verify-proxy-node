@@ -10,10 +10,10 @@ import org.opensaml.core.config.InitializationException;
 import org.opensaml.core.config.InitializationService;
 import org.opensaml.saml.metadata.resolver.MetadataResolver;
 import uk.gov.ida.dropwizard.logstash.LogstashBundle;
-import uk.gov.ida.eidas.metatron.core.dto.ConfigLoaderUtil;
-import uk.gov.ida.eidas.metatron.core.dto.EidasConfig;
-import uk.gov.ida.eidas.metatron.core.dto.KeyStoreModule;
-import uk.gov.ida.eidas.metatron.core.dto.metadata.MetadataResolverService;
+import uk.gov.ida.eidas.metatron.domain.ConfigLoaderUtil;
+import uk.gov.ida.eidas.metatron.domain.EidasConfig;
+import uk.gov.ida.eidas.metatron.domain.KeyStoreModule;
+import uk.gov.ida.eidas.metatron.domain.MetadataResolverService;
 import uk.gov.ida.eidas.metatron.health.MetatronHealthCheck;
 import uk.gov.ida.eidas.metatron.resources.MetatronResource;
 
