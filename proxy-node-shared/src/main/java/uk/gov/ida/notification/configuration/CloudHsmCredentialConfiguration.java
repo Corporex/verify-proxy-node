@@ -9,14 +9,12 @@ import org.opensaml.security.x509.X509Support;
 import uk.gov.ida.common.shared.configuration.DeserializablePublicKeyConfiguration;
 import uk.gov.ida.notification.shared.logging.ProxyNodeLogger;
 
-import java.lang.reflect.Method;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import java.security.spec.AlgorithmParameterSpec;
 import java.util.Optional;
 
 import static java.text.MessageFormat.format;
@@ -47,19 +45,9 @@ public class CloudHsmCredentialConfiguration extends CredentialConfiguration {
             cloudHsmStore.load(null, null);
 
             final Key key = cloudHsmStore.getKey(hsmKeyLabel, null);
-            Class<?> caviumKeyGenAlgorithmParameterSpecClass = ClassLoader.getSystemClassLoader()
-                    .loadClass("com.cavium.key.parameter.CaviumKeyGenAlgorithmParameterSpec");
-            AlgorithmParameterSpec algorithmParameterSpec = (AlgorithmParameterSpec) caviumKeyGenAlgorithmParameterSpecClass
-                    .getConstructor(new Class[]{String.class, boolean.class, boolean.class})
-                    .newInstance(hsmKeyLabel, false, false);
-
-            Class<?> classImportKey = ClassLoader.getSystemClassLoader().loadClass("com.cavium.cfm2.ImportKey");
-            Method importKeyMethod = classImportKey.getMethod("importKey", new Class[]{Key.class, caviumKeyGenAlgorithmParameterSpecClass} );
-            Key caviumKey = (Key) importKeyMethod.invoke(null, key, algorithmParameterSpec);
-
             BasicX509Credential credential = new BasicX509Credential(
                     certificate,
-                    (PrivateKey) caviumKey);
+                    (PrivateKey) key);
 
             this.keyHandle = (Long) ClassLoader.getSystemClassLoader()
                     .loadClass("com.cavium.key.CaviumKey")
@@ -72,5 +60,4 @@ public class CloudHsmCredentialConfiguration extends CredentialConfiguration {
             throw new CredentialConfigurationException(e);
         }
     }
-
 }
