@@ -9,7 +9,7 @@ ARG TALKS_TO_HSM=false
 ENV LD_LIBRARY_PATH=/opt/cloudhsm/lib
 ENV HSM_PARTITION=PARTITION_1
 
-ADD https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-3.0.0-2.el7.x86_64.rpm.
+ADD https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-3.0.0-2.el7.x86_64.rpm .
 ADD https://s3.amazonaws.com/cloudhsmv2-software/CloudHsmClient/EL7/cloudhsm-client-jce-3.0.0-2.el7.x86_64.rpm .
 
 RUN if ${TALKS_TO_HSM}; then echo "Installing CloudHSM libs" \
